@@ -1,10 +1,18 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
+
+const corsOptions = require('./config/corsOptions');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 // custom middleware logger
 app.use(logger);
+
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 
 // handle json data
 app.use(express.json());
@@ -17,6 +25,4 @@ app.use('/auth', require('./routes/auth'));
 // error handler
 app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
-})
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
