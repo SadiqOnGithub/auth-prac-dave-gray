@@ -1,18 +1,21 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
 const app = express();
+const { logger } = require('./middleware/logEvents');
+const errorHandler = require('./middleware/errorHandler');
 
-// app.use(bodyParser.urlencoded({ extended: false }));
+// custom middleware logger
+app.use(logger);
+
+// handle json data
 app.use(express.json());
 
-
-app.get('/', (req, res) => {
-  console.log(__dirname)
-  res.send('Hello World!');
-});
-
+// routes
+app.get('/', require('./routes/root'));
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
+
+// error handler
+app.use(errorHandler);
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
